@@ -46,6 +46,7 @@ int main() {
     printf("Entrez la valeur de c : ");
     scanf("%lf", &c);
 
+    printf("Entrez la valeur de c : ");
     printf("Les racines du polynome %.2fx^2 + %.2fx + %.2f sont :\n", a, b, c);
     findRoots(a, b, c);
 
