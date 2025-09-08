@@ -1,0 +1,54 @@
+## =========================
+## Visual Studio
+## =========================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## =========================
+## Build results
+## =========================
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+ipch/
+*.iobj
+*.ipdb
+
+## =========================
+## Cache / Profiling
+## =========================
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.opendb
+*.vsp
+*.vspx
+*.vspscc
+
+## =========================
+## Autres fichiers à ignorer
+## =========================
+*.pdb
+*.exe
+*.dll
+*.lib
+*.ilk
+*.ncb
+*.opt
+*.plg
+
+# CMake files (si jamais utilisés)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
