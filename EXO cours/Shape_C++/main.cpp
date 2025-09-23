@@ -4,7 +4,7 @@
 int main()
 {
     const int const_size = 3;
-    Rectangle rectangle(5.f, 10.f); // length_ = 5.f, width_ = 10.f;
+    Rectangle rectangle(Point2D(0, 0), Point2D(5, 10)); 
     cout << "aera Shape : " << rectangle.get_aera() << "..." << endl;
     ;
     rectangle.print_data();
@@ -22,9 +22,9 @@ int main()
     auto tab_shape = new Shape *[const_size];
     // C++ equivalent to Shape **tab_shape  = (Shape **) malloc(_SIZE_ * sizeof(Shape*)) with some additions
 
-    tab_shape[0] = new Rectangle(5, 10);
-    tab_shape[1] = new Triangle(5, 12, 15);
-    tab_shape[2] = new Circle(20);
+    tab_shape[0] = new Rectangle(Point2D(0, 0), Point2D(5, 10));
+    tab_shape[1] = new Triangle(Point2D(0, 0), Point2D(5, 0), Point2D(0, 5));
+    tab_shape[2] = new Circle(Point2D(2,2), 20);
 
     for (int i = 0; i < const_size; ++i)
     {

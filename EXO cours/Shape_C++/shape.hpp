@@ -5,6 +5,24 @@
 using std::cout;
 using std::endl;
 
+class Point2D {
+private:
+    float x_;
+    float y_;
+
+public:
+    Point2D(float x = 0.f, float y = 0.f) : x_(x), y_(y) {}
+
+    float get_x() const { return x_; }
+    float get_y() const { return y_; }
+    void set_x(float x) { x_ = x; }
+    void set_y(float y) { y_ = y; }
+
+    void print() const {
+        std::cout << "(" << x_ << ", " << y_ << ")";
+    }
+};
+
 enum class Color : unsigned char
 {
     blue = 0,
@@ -29,42 +47,38 @@ public:
 class Rectangle : public Shape
 {
 protected:
-    float length_;
-    float width_;
-
+    Point2D p1_, p2_;
 public:
     float get_aera();
     void print_data();
-    Rectangle(const float &length, const float &width);
+    Rectangle(const Point2D &p1, const Point2D &p2);
 };
 
 class Triangle : public Shape
 {
 private:
-    float length_side1_;
-    float length_side2_;
-    float length_side3_;
-
+    Point2D p1_, p2_, p3_;
 public:
     float get_aera();
     void print_data();
-    Triangle(const float &length_side1, const float &length_side2,
-             const float &length_side3);
+    Triangle(const Point2D &p1, const Point2D &p2,
+        const Point2D &p3);
 };
 
-class Circle : public Shape
+class Circle : public  Shape
 {
 private:
+    Point2D center;
     float radius_;
     float get_aera();
 
 public:
     virtual void print_data();
-    Circle(const float &radius);
+    Circle(const Point2D &center, const float &radius);
 };
 
 class Square:Rectangle {
 public:
-    Square(const float& length);
+    Square(const Point2D &p1, const float &side);
     void print_data();
 };
