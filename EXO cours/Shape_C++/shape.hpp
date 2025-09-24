@@ -5,6 +5,16 @@
 using std::cout;
 using std::endl;
 
+class Vecteur {
+    private :
+        Point2D p1;
+        Point2D p2;
+
+    public:    
+
+
+};
+
 class Point2D {
 private:
     float x_;
