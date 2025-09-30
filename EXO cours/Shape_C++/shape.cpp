@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES // for C with VS
+#define _USE_MATH_DEFINES 
 #include <math.h>
 #include "shape.hpp"
 using namespace std;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <iostream>
-#include <cmath>   // pour std::fabs
-
+#include <cmath>   
+#include <iostream>
+#include <string>
 using namespace std;
 
 
@@ -31,22 +31,18 @@ private:
     float y_;
 
 public:
-    // --- Constructeurs ---
     Vecteur(float x = 0.f, float y = 0.f) : x_(x), y_(y) {}
 
-    // Construire un vecteur à partir de 2 points
     Vecteur(const Point2D& A, const Point2D& B) {
         x_ = B.get_x() - A.get_x();
         y_ = B.get_y() - A.get_y();
     }
 
-    // --- Getters / Setters ---
     float get_x() const { return x_; }
     float get_y() const { return y_; }
     void set_x(float x) { x_ = x; }
     void set_y(float y) { y_ = y; }
 
-    // --- Opérations ---
     Vecteur operator+(const Vecteur& v) const {
         return Vecteur(x_ + v.x_, y_ + v.y_);
     }
@@ -67,21 +63,54 @@ public:
 
 class Polygon {
 private:
-    vector<Point2D> points_;
+    Point2D* points_; 
+    int n_;           
 
 public:
-    // Constructeur
-    Polygon(const vector<Point2D>& pts) : points_(pts) {}
+    // Constructeur par défaut
+    Polygon() : points_(nullptr), n_(0) {}
 
-    // Calcul de l'aire (formule de Shoelace)
+    // constructeur de polyognes avec n points
+   Polygon(const Point2D pts[], int n) : points_(nullptr), n_(n) {
+        if (n_ > 0) {
+            points_ = new Point2D[n_];
+            for (int i = 0; i < n_; ++i) points_[i] = pts[i];
+        }
+    }
+
+    //Si on veut créer un deuxième polygone
+    Polygon(const Polygon& other) : points_(nullptr), n_(other.n_) {
+        if (n_ > 0) {
+            points_ = new Point2D[n_];
+            for (int i = 0; i < n_; ++i) points_[i] = other.points_[i];
+        }
+    }
+
+    // Opérateur d'affectation, permets de faire poly1 = poly2 en gros 
+    Polygon& operator=(const Polygon& other) {
+        if (this == &other) return *this;
+        delete[] points_;
+        n_ = other.n_;
+        if (n_ > 0) {
+            points_ = new Point2D[n_];
+            for (int i = 0; i < n_; ++i) points_[i] = other.points_[i];
+        }
+        else {
+            points_ = nullptr;
+        }
+        return *this;
+    }
+
+    // Si on veut supprimer un polynome, c'est comme le free en C
+    ~Polygon() { delete[] points_; }
+
+    // Calcul de l'aire  avec la formule donnée dans l'énoncé
     float area() const {
-        int n = points_.size();
-        if (n < 3) return 0.f; // pas un polygone
-
+        if (n_ < 3) return 0.f;
         float sum = 0.f;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n_; ++i) {
             const Point2D& p1 = points_[i];
-            const Point2D& p2 = points_[(i + 1) % n]; // relie au premier
+            const Point2D& p2 = points_[(i + 1) % n_]; 
             sum += (p1.get_x() * p2.get_y()) - (p2.get_x() * p1.get_y());
         }
         return fabs(sum) / 2.f;
@@ -90,13 +119,100 @@ public:
     // Affichage
     void print() const {
         cout << "Polygon: ";
-        for (const auto& p : points_) {
-            p.print();
+        for (int i = 0; i < n_; ++i) {
+            points_[i].print();
             cout << " ";
         }
         cout << endl;
     }
+
 };
+
+class BankAccount {
+protected:
+    int number;
+    string owner;
+    float balance;
+
+public:
+    BankAccount(int num, string own, float bal = 0.0f)
+        : number(num), owner(own), balance(bal) {
+    }
+
+    virtual ~BankAccount() {}
+
+    void deposit(float amount) {
+        balance += amount;
+        cout << "Déposer un montant: " << amount << ", Nouveau solde: " << balance << endl;
+    }
+
+    virtual void withdrawal(float amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            cout << "Retrait: " << amount << ", Nouveau solde: " << balance << endl;
+        }
+        else {
+            cout << "Fonds insuffisant." << endl;
+        }
+    }
+
+    float getBalance() const { return balance; }
+    void printAccount() const {
+        cout << "Compte #" << number << ", Propriétaire: " << owner
+            << ", Solde: " << balance << endl;
+    }
+};
+
+// Classe CheckingAccount (compte courant)
+class CheckingAccount : public BankAccount {
+private:
+    float overdraftLimit;
+
+public:
+    CheckingAccount(int num, string own, float bal = 0.0f, float overdraft = 0.0f)
+        : BankAccount(num, own, bal), overdraftLimit(overdraft) {
+    }
+
+    void withdrawal(float amount) override {
+        if (amount <= balance + overdraftLimit) {
+            balance -= amount;
+            cout << "Retrait: " << amount << ", Nouveau solde: " << balance << endl;
+        }
+        else {
+            cout << "Limite du plafond de découvert autorisée atteinte." << endl;
+        }
+    }
+
+    void transfer(float amount, BankAccount& otherAccount) {
+        if (amount <= balance + overdraftLimit) {
+            balance -= amount;
+            otherAccount.deposit(amount);
+            cout << "Transféré " << amount << " à un autre compte." << endl;
+        }
+        else {
+            cout << "Transfert impossible :Limite du plafond de découvert autorisée atteinte." << endl;
+        }
+    }
+};
+
+// Classe SavingsAccount (compte épargne)
+class SavingsAccount : public BankAccount {
+private:
+    float annualInterestRate;
+
+public:
+    SavingsAccount(int num, string own, float bal = 0.0f, float rate = 0.0f)
+        : BankAccount(num, own, bal), annualInterestRate(rate) {
+    }
+
+    void depositAnnualInterest() {
+        float interest = balance * annualInterestRate;
+        balance += interest;
+        cout << "Intérêt annuel déposé: " << interest
+            << ", Nouveau solde: " << balance << endl;
+    }
+};
+
 enum class Color : unsigned char
 {
     blue = 0,
